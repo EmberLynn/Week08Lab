@@ -33,8 +33,7 @@ public class NotesServlet extends HttpServlet {
             List<Note> notes = ns.getAll();
             request.setAttribute("notes", notes);
         } catch (Exception ex) {
-            Logger.getLogger(NotesServlet.class.getName()).log(Level.SEVERE, null, ex);
-            //add error message later if time allows
+            ex.getMessage();
         }
         
         getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
@@ -52,6 +51,46 @@ public class NotesServlet extends HttpServlet {
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
        
+       NoteService ns = new NoteService();
+       String action = request.getParameter("action");
+       String title = request.getParameter("title");
+       String contents = request.getParameter("contents");
+       int noteid;
+       
+       try {
+       if(action.equals("add"))
+       {
+            ns.insert(contents, title);
+       }
+       if(action.equals("edit"))
+       {
+           noteid = Integer.parseInt(request.getParameter("noteid"));
+           Note note = ns.get(noteid);
+           request.setAttribute("note", note);
+           request.setAttribute("edit", action);
+       }
+       if(action.equals("save"))
+       {
+           noteid = Integer.parseInt(request.getParameter("noteid"));
+           ns.update(noteid, title, contents);
+       }
+       if(action.equals("delete"))
+       {
+           noteid = Integer.parseInt(request.getParameter("noteid"));
+           ns.delete(noteid);
+       }
+       } catch (Exception ex) {
+                ex.getMessage();
+            }
+       
+       
+       try {
+            List<Note> notes = ns.getAll();
+            request.setAttribute("notes", notes);
+        } catch (Exception ex) {
+            ex.getMessage();
+        }
+       getServletContext().getRequestDispatcher("/WEB-INF/notes.jsp").forward(request, response);
     }
 
 }

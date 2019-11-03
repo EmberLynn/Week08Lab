@@ -18,7 +18,7 @@
             <thead>
                 <tr>
                     <th>Date Created</th>
-                    <th>Title</th>
+                    <th colspan="2">Title</th>
                 </tr>
             </thead>
             <tbody>
@@ -26,19 +26,38 @@
                 <tr>
                 <form method="post" action="">
                     <td>${note.datecreated}</td>
-                    <td>${note.title}&nbsp;&nbsp;&nbsp;<input type="submit" value="Edit" /></td>
+                    <td>${note.title}</td>
+                    <td><input type="submit" value="Edit" /></td>
                     <input type="hidden" name="action" value="edit">
+                    <input type="hidden" name="noteid" value="${note.noteid}">
                 </form>
                 </tr>
                 </c:forEach>
             </tbody>
         </table>
-        <form method="post" action="">
-        <h2>Add Note</h2>
-        <input type="text" name="title" value="" placeholder="Title"/><br>
-        <textarea name="contents"  rows ="10" cols="50" placeholder="type a note..."></textarea>
-        <input type="submit" value="Add" />
-        </form>
-        </form>
+        <c:if test="${edit eq null}">
+            <form method="post" action="">
+            <h2>Add Note</h2>
+            <input type="text" name="title" value="" placeholder="Title"/><br>
+            <textarea name="contents"  rows ="10" cols="50" placeholder="type a note..."></textarea>
+            <input type="submit" value="Add"/>
+            <input type="hidden" name="action" value="add">
+            </form>
+        </c:if>
+        <c:if test="${edit ne null}">
+            <h2>Edit Note</h2>
+            <form method="post" action="">
+                <input type="submit" value="Delete Note" name="delete" /> 
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="noteid" value="${note.noteid}">
+            </form>
+            <form method="post" action="">
+            <input type="text" name="title" value="${note.title}" placeholder="Title"/><br>
+            <textarea name="contents"  rows ="10" cols="50" placeholder="type a note...">${note.contents}</textarea>
+            <input type="submit" value="Save"/>
+            <input type="hidden" name="action" value="save">
+            <input type="hidden" name="noteid" value="${note.noteid}">
+            </form>
+        </c:if>
     </body>
 </html>
